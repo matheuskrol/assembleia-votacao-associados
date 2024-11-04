@@ -1,4 +1,4 @@
-package br.com.sicredi.desafio.assembleia_votacao_associados;
+package br.com.sicredi.desafio.assembleia.votacao.associados;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
