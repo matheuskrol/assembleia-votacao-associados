@@ -47,6 +47,7 @@ public class SessaoController {
         int tempoAbertura = dto.segundosAbertura() == null ? 60 : dto.segundosAbertura();
         sessaoService.abrirSessao(sessao);
         pautaService.atualizarStatusProcessando(sessao.getIdPauta());
+        log.info("Para realizar a tarefa de fechar a sessão após o período definido, optei por utilizar o ScheduledExecutorService");
         ScheduledExecutorService fecharSessao = Executors.newScheduledThreadPool(1);
         fecharSessao.schedule(new FecharSessaoScheduler(sessao, votoAssociadoService, pautaService, notificacaoProducer), tempoAbertura, TimeUnit.SECONDS);
         log.info("Sessão ID {} aberta para votação", sessao.getId());
