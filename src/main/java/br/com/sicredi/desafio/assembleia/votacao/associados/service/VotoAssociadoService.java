@@ -1,11 +1,7 @@
 package br.com.sicredi.desafio.assembleia.votacao.associados.service;
 
-import br.com.sicredi.desafio.assembleia.votacao.associados.entity.Pauta;
-import br.com.sicredi.desafio.assembleia.votacao.associados.entity.Sessao;
 import br.com.sicredi.desafio.assembleia.votacao.associados.entity.VotoAssociado;
 import br.com.sicredi.desafio.assembleia.votacao.associados.exception.BadRequestException;
-import br.com.sicredi.desafio.assembleia.votacao.associados.repository.PautaRepository;
-import br.com.sicredi.desafio.assembleia.votacao.associados.repository.SessaoRepository;
 import br.com.sicredi.desafio.assembleia.votacao.associados.repository.VotoAssociadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +14,6 @@ public class VotoAssociadoService {
 
     @Autowired
     private VotoAssociadoRepository votoAssociadoRepository;
-
-    @Autowired
-    private PautaRepository pautaRepository;
 
     public void registrarVoto(VotoAssociado votoAssociado) {
         try {

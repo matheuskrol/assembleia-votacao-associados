@@ -37,14 +37,6 @@ public class VotoAssociado extends EntidadeBase {
     @NotNull
     private LocalDateTime horarioVoto;
 
-    public VotoAssociado(Long id, Long idAssociado, Long idSessao, Voto voto, LocalDateTime horarioVoto) {
-        this.setId(id);
-        this.setIdAssociado(idAssociado);
-        this.setIdSessao(idSessao);
-        this.setVoto(voto);
-        this.setHorarioVoto(horarioVoto);
-    }
-
     public VotoAssociado(Long idAssociado, Long idSessao, Voto voto, LocalDateTime horarioVoto) {
         this.setIdAssociado(idAssociado);
         this.setIdSessao(idSessao);

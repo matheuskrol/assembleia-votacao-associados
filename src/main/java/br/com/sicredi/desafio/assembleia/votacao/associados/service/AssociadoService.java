@@ -15,8 +15,12 @@ public class AssociadoService {
     @Autowired
     private AssociadoRepository associadoRepository;
 
+    /*@Autowired
+    private ValidacaoCpfAssociadoService validacaoCpfAssociadoService;*/
+
     public void salvar(Associado associado) {
         try {
+            //validacaoCpfAssociadoService.valida(associado);
             associadoRepository.save(associado);
         } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
@@ -26,6 +30,7 @@ public class AssociadoService {
     public void atualizar(Long id, Associado associado) {
         associadoRepository.findById(id).ifPresentOrElse((existe) -> {
                     associado.setId(id);
+                    //validacaoCpfAssociadoService.valida(associado);
                     associadoRepository.save(associado);
                 }, () -> {
                     throw new BadRequestException("Associado %d não existe! ".formatted(id));
@@ -36,5 +41,11 @@ public class AssociadoService {
     public List<Associado> listar() {
         Sort sort = Sort.by("nome").ascending();
         return associadoRepository.findAll(sort);
+    }
+
+    public Associado buscaAssociadoPorId(Long id) {
+        return associadoRepository.findById(id).orElseThrow(() ->
+                new BadRequestException("Associado %d não existe! ".formatted(id))
+        );
     }
 }

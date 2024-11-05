@@ -1,9 +1,13 @@
 package br.com.sicredi.desafio.assembleia.votacao.associados.web;
 
 import br.com.sicredi.desafio.assembleia.votacao.associados.dto.VotoAssociadoDTO;
+import br.com.sicredi.desafio.assembleia.votacao.associados.entity.Associado;
+import br.com.sicredi.desafio.assembleia.votacao.associados.entity.Pauta;
 import br.com.sicredi.desafio.assembleia.votacao.associados.entity.Sessao;
 import br.com.sicredi.desafio.assembleia.votacao.associados.entity.VotoAssociado;
 import br.com.sicredi.desafio.assembleia.votacao.associados.exception.BadRequestException;
+import br.com.sicredi.desafio.assembleia.votacao.associados.service.AssociadoService;
+import br.com.sicredi.desafio.assembleia.votacao.associados.service.PautaService;
 import br.com.sicredi.desafio.assembleia.votacao.associados.service.SessaoService;
 import br.com.sicredi.desafio.assembleia.votacao.associados.service.VotoAssociadoService;
 import br.com.sicredi.desafio.assembleia.votacao.associados.util.DateUtils;
@@ -28,10 +32,18 @@ public class VotoAssociadoController {
     @Autowired
     private SessaoService sessaoService;
 
+    @Autowired
+    private AssociadoService associadoService;
+
+    @Autowired
+    private PautaService pautaService;
+
     @PostMapping(path = "/registrarVoto")
     ResponseEntity<VotoAssociado> registrarVoto(@Valid @RequestBody VotoAssociadoDTO dto) {
         VotoAssociado votoAssociado = dto.converteParaVotoAssociado();
         Sessao sessao = sessaoService.buscaSessaoPorId(votoAssociado.getIdSessao());
+        Associado associado = associadoService.buscaAssociadoPorId(votoAssociado.getIdAssociado());
+        Pauta pauta = pautaService.buscaPautaPorId(sessao.getIdPauta());
         if (!DateUtils.horarioEntrePeriodos(votoAssociado.getHorarioVoto(), sessao.getHorarioInicio(), sessao.getHorarioTermino())) {
             throw new BadRequestException("Sessão já encerrada para votação");
         }
@@ -40,7 +52,7 @@ public class VotoAssociadoController {
             throw new BadRequestException("Associado já votou para esta pauta");
         }
         votoAssociadoService.registrarVoto(votoAssociado);
-        log.info("Voto do associado {} para a pauta ({}) registrado com sucesso", votoAssociado.getAssociado().getNome(), sessao.getPauta().getDescricao());
+        log.info("Voto do associado {} para a pauta ({}) registrado com sucesso", associado.getNome(), pauta.getDescricao());
         return ResponseEntity.status(HttpStatus.OK).body(votoAssociado);
     }
 }

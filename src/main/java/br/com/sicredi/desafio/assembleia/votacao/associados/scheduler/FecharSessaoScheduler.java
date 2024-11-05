@@ -3,6 +3,7 @@ package br.com.sicredi.desafio.assembleia.votacao.associados.scheduler;
 import br.com.sicredi.desafio.assembleia.votacao.associados.entity.Pauta;
 import br.com.sicredi.desafio.assembleia.votacao.associados.entity.Sessao;
 import br.com.sicredi.desafio.assembleia.votacao.associados.entity.VotoAssociado;
+import br.com.sicredi.desafio.assembleia.votacao.associados.kafka.NotificacaoProducer;
 import br.com.sicredi.desafio.assembleia.votacao.associados.service.PautaService;
 import br.com.sicredi.desafio.assembleia.votacao.associados.service.VotoAssociadoService;
 import br.com.sicredi.desafio.assembleia.votacao.associados.util.DateUtils;
@@ -13,10 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public record FecharSessaoTask(
+public record FecharSessaoScheduler(
         Sessao sessao,
         VotoAssociadoService votoAssociadoService,
-        PautaService pautaService
+        PautaService pautaService,
+        NotificacaoProducer notificacaoProducer
 ) implements Runnable {
 
     @Override
@@ -41,5 +43,6 @@ public record FecharSessaoTask(
         pauta.setVotosContra(votosContra);
         log.info("Sessão ID {} fechada para votação", sessao.getId());
         pautaService.salvar(pauta);
+        notificacaoProducer.enviaNotificacao(pauta);
     }
 }

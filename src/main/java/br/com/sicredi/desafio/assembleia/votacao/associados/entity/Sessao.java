@@ -34,13 +34,6 @@ public class Sessao extends EntidadeBase {
     @OneToMany(mappedBy = "sessao")
     private List<VotoAssociado> votos;
 
-    public Sessao(Long id, Long idPauta, LocalDateTime horarioInicio, LocalDateTime horarioTermino) {
-        this.setId(id);
-        this.setIdPauta(idPauta);
-        this.setHorarioInicio(horarioInicio);
-        this.setHorarioTermino(horarioTermino);
-    }
-
     public Sessao(Long idPauta, LocalDateTime horarioInicio, LocalDateTime horarioTermino) {
         this.setIdPauta(idPauta);
         this.setHorarioInicio(horarioInicio);

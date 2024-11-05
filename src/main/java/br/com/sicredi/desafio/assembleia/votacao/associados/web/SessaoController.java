@@ -2,7 +2,8 @@ package br.com.sicredi.desafio.assembleia.votacao.associados.web;
 
 import br.com.sicredi.desafio.assembleia.votacao.associados.dto.SessaoDTO;
 import br.com.sicredi.desafio.assembleia.votacao.associados.entity.Sessao;
-import br.com.sicredi.desafio.assembleia.votacao.associados.scheduler.FecharSessaoTask;
+import br.com.sicredi.desafio.assembleia.votacao.associados.kafka.NotificacaoProducer;
+import br.com.sicredi.desafio.assembleia.votacao.associados.scheduler.FecharSessaoScheduler;
 import br.com.sicredi.desafio.assembleia.votacao.associados.service.PautaService;
 import br.com.sicredi.desafio.assembleia.votacao.associados.service.SessaoService;
 import br.com.sicredi.desafio.assembleia.votacao.associados.service.VotoAssociadoService;
@@ -35,6 +36,9 @@ public class SessaoController {
     @Autowired
     private VotoAssociadoService votoAssociadoService;
 
+    @Autowired
+    private NotificacaoProducer notificacaoProducer;
+
     @Transactional
     @PostMapping(path = "/abrirSessao")
     ResponseEntity<Sessao> abrirSessao(@Valid @RequestBody SessaoDTO dto) {
@@ -44,7 +48,7 @@ public class SessaoController {
         sessaoService.abrirSessao(sessao);
         pautaService.atualizarStatusProcessando(sessao.getIdPauta());
         ScheduledExecutorService fecharSessao = Executors.newScheduledThreadPool(1);
-        fecharSessao.schedule(new FecharSessaoTask(sessao, votoAssociadoService, pautaService), tempoAbertura, TimeUnit.SECONDS);
+        fecharSessao.schedule(new FecharSessaoScheduler(sessao, votoAssociadoService, pautaService, notificacaoProducer), tempoAbertura, TimeUnit.SECONDS);
         log.info("Sessão ID {} aberta para votação", sessao.getId());
         return ResponseEntity.status(HttpStatus.OK).body(sessao);
     }
