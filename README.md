@@ -34,7 +34,7 @@ $ ./mvnw clean package
 ```
 - Executar a aplicação:
 ```
-$ java -jar target/todolist-0.0.1-SNAPSHOT.jar
+$ java -jar target/assembleia-votacao-associados-0.0.1-SNAPSHOT.jar
 ```
 
 A URL de acesso da API poderá ser acessada em [localhost:8080](http://localhost:8080).
